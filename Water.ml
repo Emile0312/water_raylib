@@ -233,14 +233,18 @@ let f_ressort_inverse_squared (p : particle) (q : particle) : vect =
 let f_amortissement (p : particle) (q : particle) : vect = 
 	(*à changer !!!*)
 	if norm (p.vel_x -. q.vel_x, p.vel_y -. q.vel_y) <> 0. then 
-	let v = sqrt ((p.vel_x -. q.vel_x)*.(p.vel_x -. q.vel_x) +. (p.vel_y -. q.vel_y)*.(p.vel_y -. q.vel_y)) in 
-		((-. !C.r_a) *. v)  $*. (unitaire (p.vel_x -. q.vel_x, p.vel_y -. q.vel_y))
+	let res = ((p.vel_x -. q.vel_x),(p.vel_y -. q.vel_y)) in 
+	let u = (p.x-.q.x),(p.y-.q.y) in 
+	let proj = (squared_norm u) $/. ((res $. u) $*. u) in 
+	(-. !C.r_a)   $*. proj
 	else (0.,0.)
 
 let f_amortissement_solid (p : solid_particle) (q : solid_particle) : vect = 
 	if norm (p.vel_x -. q.vel_x, p.vel_y -. q.vel_y) <> 0. then 
-	let v = sqrt ((p.vel_x -. q.vel_x)*.(p.vel_x -. q.vel_x) +. (p.vel_y -. q.vel_y)*.(p.vel_y -. q.vel_y)) in 
-		((-. !C.r_a_solid) *. v)  $*. (unitaire (p.vel_x -. q.vel_x, p.vel_y -. q.vel_y))
+	let res = ((p.vel_x -. q.vel_x),(p.vel_y -. q.vel_y)) in 
+	let u = (p.x-.q.x),(p.y-.q.y) in 
+	let proj = (squared_norm u) $/. ((res $. u) $*. u) in 
+	(-. !C.r_a_solid)   $*. proj
 	else (0.,0.)
 
 let f_spoon_gaussienne (p : particle) (q : particle) : vect = 

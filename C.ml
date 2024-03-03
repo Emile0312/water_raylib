@@ -62,9 +62,9 @@ let last_polygon_corner_selected = ref 0
 
 let r_a = ref 0.05
 
-let r_a_solid = ref 1. 
+let r_a_solid = ref 25. 
 
-let r_k_solid = ref 100.
+let r_k_solid = ref 200.
 
 let r_delta_t = ref 60.
 
