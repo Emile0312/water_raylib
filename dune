@@ -1,0 +1,9 @@
+(executable
+ (name Water)
+ (libraries unix raylib)
+)
+(env
+ (dev
+   (flags (:standard -warn-error -A))
+  )
+)

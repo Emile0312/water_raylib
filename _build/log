@@ -1,0 +1,93 @@
+# dune build
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Shared cache location: /home/awelime/.cache/dune/db
+# Workspace root: /home/awelime/water
+# Auto-detected concurrency: 12
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dev
+#  ; merlin = true
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; installed_env =
+#      map
+#        { "INSIDE_DUNE" : "/home/awelime/water/_build/default"
+#        ; "OCAML_COLOR" : "always"
+#        ; "OPAMCOLOR" : "always"
+#        }
+#  ; instrument_with = []
+#  }
+$ /home/awelime/.opam/5.0.0/bin/ocamlc.opt -config > /tmp/dune_05672b_output
+$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamldep.opt -modules -impl C.ml) > _build/default/.Water.eobjs/dune__exe__C.impl.d
+$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -bin-annot -I .Water.eobjs/byte -I /home/awelime/.opam/5.0.0/lib/bigarray-compat -I /home/awelime/.opam/5.0.0/lib/ctypes -I /home/awelime/.opam/5.0.0/lib/ctypes/stubs -I /home/awelime/.opam/5.0.0/lib/integers -I /home/awelime/.opam/5.0.0/lib/ocaml/str -I /home/awelime/.opam/5.0.0/lib/ocaml/unix -I /home/awelime/.opam/5.0.0/lib/ppx_cstubs -I /home/awelime/.opam/5.0.0/lib/raylib -I /home/awelime/.opam/5.0.0/lib/raylib/c -I /home/awelime/.opam/5.0.0/lib/raylib/constants -I /home/awelime/.opam/5.0.0/lib/raylib/functions -I /home/awelime/.opam/5.0.0/lib/raylib/types -I /home/awelime/.opam/5.0.0/lib/stdlib-shims -no-alias-deps -opaque -open Dune__exe -o .Water.eobjs/byte/dune__exe__C.cmo -c -impl C.ml)
+$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -bin-annot -I .Water.eobjs/byte -I /home/awelime/.opam/5.0.0/lib/bigarray-compat -I /home/awelime/.opam/5.0.0/lib/ctypes -I /home/awelime/.opam/5.0.0/lib/ctypes/stubs -I /home/awelime/.opam/5.0.0/lib/integers -I /home/awelime/.opam/5.0.0/lib/ocaml/str -I /home/awelime/.opam/5.0.0/lib/ocaml/unix -I /home/awelime/.opam/5.0.0/lib/ppx_cstubs -I /home/awelime/.opam/5.0.0/lib/raylib -I /home/awelime/.opam/5.0.0/lib/raylib/c -I /home/awelime/.opam/5.0.0/lib/raylib/constants -I /home/awelime/.opam/5.0.0/lib/raylib/functions -I /home/awelime/.opam/5.0.0/lib/raylib/types -I /home/awelime/.opam/5.0.0/lib/stdlib-shims -no-alias-deps -opaque -open Dune__exe -o .Water.eobjs/byte/dune__exe__Ui.cmo -c -impl Ui.ml)
+> File "Ui.ml", line 58, characters 18-19:
+> 58 | 		| Block ((px,py,w,h),q) ->  
+>      		                ^
+> Warning 27 [unused-var-strict]: unused variable w.
+> File "Ui.ml", line 58, characters 20-21:
+> 58 | 		| Block ((px,py,w,h),q) ->  
+>      		                  ^
+> Warning 27 [unused-var-strict]: unused variable h.
+$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -I .Water.eobjs/byte -I .Water.eobjs/native -I /home/awelime/.opam/5.0.0/lib/bigarray-compat -I /home/awelime/.opam/5.0.0/lib/ctypes -I /home/awelime/.opam/5.0.0/lib/ctypes/stubs -I /home/awelime/.opam/5.0.0/lib/integers -I /home/awelime/.opam/5.0.0/lib/ocaml/str -I /home/awelime/.opam/5.0.0/lib/ocaml/unix -I /home/awelime/.opam/5.0.0/lib/ppx_cstubs -I /home/awelime/.opam/5.0.0/lib/raylib -I /home/awelime/.opam/5.0.0/lib/raylib/c -I /home/awelime/.opam/5.0.0/lib/raylib/constants -I /home/awelime/.opam/5.0.0/lib/raylib/functions -I /home/awelime/.opam/5.0.0/lib/raylib/types -I /home/awelime/.opam/5.0.0/lib/stdlib-shims -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .Water.eobjs/native/dune__exe__C.cmx -c -impl C.ml)
+$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -I .Water.eobjs/byte -I .Water.eobjs/native -I /home/awelime/.opam/5.0.0/lib/bigarray-compat -I /home/awelime/.opam/5.0.0/lib/ctypes -I /home/awelime/.opam/5.0.0/lib/ctypes/stubs -I /home/awelime/.opam/5.0.0/lib/integers -I /home/awelime/.opam/5.0.0/lib/ocaml/str -I /home/awelime/.opam/5.0.0/lib/ocaml/unix -I /home/awelime/.opam/5.0.0/lib/ppx_cstubs -I /home/awelime/.opam/5.0.0/lib/raylib -I /home/awelime/.opam/5.0.0/lib/raylib/c -I /home/awelime/.opam/5.0.0/lib/raylib/constants -I /home/awelime/.opam/5.0.0/lib/raylib/functions -I /home/awelime/.opam/5.0.0/lib/raylib/types -I /home/awelime/.opam/5.0.0/lib/stdlib-shims -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .Water.eobjs/native/dune__exe__Ui.cmx -c -impl Ui.ml)
+> File "Ui.ml", line 58, characters 18-19:
+> 58 | 		| Block ((px,py,w,h),q) ->  
+>      		                ^
+> Warning 27 [unused-var-strict]: unused variable w.
+> File "Ui.ml", line 58, characters 20-21:
+> 58 | 		| Block ((px,py,w,h),q) ->  
+>      		                  ^
+> Warning 27 [unused-var-strict]: unused variable h.
+$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -I .Water.eobjs/byte -I .Water.eobjs/native -I /home/awelime/.opam/5.0.0/lib/bigarray-compat -I /home/awelime/.opam/5.0.0/lib/ctypes -I /home/awelime/.opam/5.0.0/lib/ctypes/stubs -I /home/awelime/.opam/5.0.0/lib/integers -I /home/awelime/.opam/5.0.0/lib/ocaml/str -I /home/awelime/.opam/5.0.0/lib/ocaml/unix -I /home/awelime/.opam/5.0.0/lib/ppx_cstubs -I /home/awelime/.opam/5.0.0/lib/raylib -I /home/awelime/.opam/5.0.0/lib/raylib/c -I /home/awelime/.opam/5.0.0/lib/raylib/constants -I /home/awelime/.opam/5.0.0/lib/raylib/functions -I /home/awelime/.opam/5.0.0/lib/raylib/types -I /home/awelime/.opam/5.0.0/lib/stdlib-shims -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .Water.eobjs/native/dune__exe__Water.cmx -c -impl Water.ml)
+> File "Water.ml", line 12, characters 0-22:
+> 12 | type point = int * int
+>      ^^^^^^^^^^^^^^^^^^^^^^
+> Warning 34 [unused-type-declaration]: unused type point.
+> File "Water.ml", line 28, characters 4-8:
+> 28 | let ($.) (a : vect)  (b : vect) : float = 
+>          ^^^^
+> Warning 32 [unused-value-declaration]: unused value $..
+> File "Water.ml", line 97, characters 0-33:
+> 97 | type solid = solid_particle array
+>      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Warning 34 [unused-type-declaration]: unused type solid.
+> File "Water.ml", line 174, characters 0-22:
+> 174 | type mur = vect * vect
+>       ^^^^^^^^^^^^^^^^^^^^^^
+> Warning 34 [unused-type-declaration]: unused type mur.
+> File "Water.ml", line 193, characters 4-16:
+> 193 | let squared_norm ((x,y) : vect) = x*.x +.y*.y
+>           ^^^^^^^^^^^^
+> Warning 32 [unused-value-declaration]: unused value squared_norm.
+> File "Water.ml", line 325, characters 27-31:
+> 325 | 	let rec process_collision unit : unit = 
+>       	                          ^^^^
+> Warning 27 [unused-var-strict]: unused variable unit.
+> File "Water.ml", line 416, characters 5-13:
+> 416 | 	let max_dist = C.fact_dist_max()*.C.l0() in
+>       	    ^^^^^^^^
+> Warning 26 [unused-var]: unused variable max_dist.
+> File "Water.ml", line 417, characters 5-17:
+> 417 | 	let taille_carre = nb_particles |> C.foi |> sqrt |> C.iof in 
+>       	    ^^^^^^^^^^^^
+> Warning 26 [unused-var]: unused variable taille_carre.
+> File "Water.ml", line 418, characters 30-31:
+> 418 | 	Array.init nb_particles (fun i -> {
+>       	                             ^
+> Warning 27 [unused-var-strict]: unused variable i.
+> File "Water.ml", line 434, characters 40-41:
+> 434 | let update_particle_links grid pearls k m polys = 
+>                                               ^
+> Warning 27 [unused-var-strict]: unused variable m.
+> File "Water.ml", line 434, characters 42-47:
+> 434 | let update_particle_links grid pearls k m polys = 
+>                                                 ^^^^^
+> Warning 27 [unused-var-strict]: unused variable polys.
+> File "Water.ml", line 584, characters 27-31:
+> 584 | 	let rec process_collision unit : unit = 
+>       	                          ^^^^
+> Warning 27 [unused-var-strict]: unused variable unit.
+$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -o Water.exe /home/awelime/.opam/5.0.0/lib/ocaml/unix/unix.cmxa /home/awelime/.opam/5.0.0/lib/stdlib-shims/stdlib_shims.cmxa /home/awelime/.opam/5.0.0/lib/integers/integers.cmxa -I /home/awelime/.opam/5.0.0/lib/integers /home/awelime/.opam/5.0.0/lib/bigarray-compat/bigarray_compat.cmxa /home/awelime/.opam/5.0.0/lib/ctypes/ctypes.cmxa -I /home/awelime/.opam/5.0.0/lib/ctypes /home/awelime/.opam/5.0.0/lib/ocaml/str/str.cmxa /home/awelime/.opam/5.0.0/lib/ctypes/stubs/ctypes_stubs.cmxa /home/awelime/.opam/5.0.0/lib/ppx_cstubs/ppx_cstubs.cmxa /home/awelime/.opam/5.0.0/lib/raylib/constants/raylib_generated_constants.cmxa /home/awelime/.opam/5.0.0/lib/raylib/types/raylib_generated_types.cmxa /home/awelime/.opam/5.0.0/lib/raylib/functions/raylib_functions.cmxa /home/awelime/.opam/5.0.0/lib/raylib/c/raylib_c.cmxa -I /home/awelime/.opam/5.0.0/lib/raylib/c /home/awelime/.opam/5.0.0/lib/raylib/raylib.cmxa .Water.eobjs/native/dune__exe.cmx .Water.eobjs/native/dune__exe__C.cmx .Water.eobjs/native/dune__exe__Ui.cmx .Water.eobjs/native/dune__exe__Water.cmx)
