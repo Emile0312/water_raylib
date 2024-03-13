@@ -82,9 +82,9 @@ let h = 900
 let w = 1700
 
 let speed_to_color speed = 
-	Raylib.color_from_hsv (Raylib.Vector3.create (245. -. !r_color_factor*.speed) 1. (0.8))
+	Raylib.color_from_hsv  (245. -. !r_color_factor*.speed) 1. (0.8)
 
 let speed_to_color_with_fade speed fade = 
-	Raylib.color_from_hsv (Raylib.Vector3.create (245. -. !r_color_factor*.speed) fade 0.8)
+	Raylib.color_from_hsv  (245. -. !r_color_factor*.speed) fade 0.8
 
 

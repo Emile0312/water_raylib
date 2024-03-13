@@ -85,6 +85,8 @@ type solid_particle =
 	mutable vel_y : float;
 	mutable acc_x : float;
 	mutable acc_y : float;
+	mutable acc2_x : float;
+	mutable acc2_y : float;
 	mutable mass : float;
 	mutable fixed : bool;
 	mutable fixed_links : (int * float * bool) list;
@@ -268,12 +270,14 @@ let tableau_f_ressort = [|f_ressort_lineaire;f_ressort_carre;f_ressort_inverse;f
 
 let triangle = 
 [| {
-	x = 501.;
+	x = 540.;
 	y = 500.;
 	vel_x = 0.;
 	vel_y =	0.;
 	acc_x = 0.;
 	acc_y = 0.;
+	acc2_x = 0.;
+	acc2_y = 0.;
 	mass = 10.;
 	fixed = false;
 	fixed_links = [(1,40.,true);(2,40.,true)]
@@ -281,23 +285,27 @@ let triangle =
 };
 {
 	x = 500.;
-	y = 501.;
+	y = 540.;
 	vel_x = 0.;
 	vel_y =	0.;
 	acc_x = 0.;
 	acc_y = 0.;
+	acc2_x = 0.;
+	acc2_y = 0.;
 	mass = 10.;
 	fixed = false;
 	fixed_links = [(0,40.,true);(2,40.,true)]
 
 };
 {
-	x = 505.;
-	y = 505.;
+	x = 540.;
+	y = 540.;
 	vel_x = 0.;
 	vel_y =	0.;
 	acc_x = 0.;
 	acc_y = 0.;
+	acc2_x = 0.;
+	acc2_y = 0.;
 	mass = 10.;
 	fixed = false;
 	fixed_links = [(0,40.,true);(1,40.,true)]
@@ -313,12 +321,14 @@ let update_solid_acceleration s solid =
 		$+. (f_ressort_lineaire_solid s solid.(k) l0 ) 
 		$+. (f_amortissement_solid s solid.(k) )
 	) 
-	(s.acc_x,s.acc_y) 
+	(s.acc2_x,s.acc2_y) 
 	s.fixed_links in 
 	s.acc_x <- ax;
-	s.acc_y <- ay
+	s.acc_y <- ay;
+	s.acc2_x <- 0.;
+	s.acc2_y <- 0.
 
-let update_solid_position s polys solid = 
+let update_solid_position s polys solid (pearls : particle array) grid = 
 	(*même fonction que pour les particules parce que flemme *)
 	s.vel_x <- s.vel_x +. (s.acc_x/.s.mass)*.C.delta_t();
 	s.vel_y <- s.vel_y +. (s.acc_y/.s.mass +. !C.r_g)*. C.delta_t();
@@ -326,6 +336,48 @@ let update_solid_position s polys solid =
 	let qx,qy = ref (s.vel_x*.C.delta_t()), ref (s.vel_y*.C.delta_t()) in  
 	let last_hit_nb = ref (-1) in
 	let last_hit_side = ref (-1) in  
+
+	let is_in_triangle x pos1 pos2 pos3 = 
+		let systeme = (pos2 $-. pos1),(pos3 $-. pos1) in 
+		let s,t = (inverse systeme) &*. (x $-. pos1) in 
+		(s <= 1. && s >= 0. && t <= 1. && t >= 0.
+		&& s +. t <= 1.)
+	in
+	let sign (ax,ay) (bx,by) (cx,cy) = 
+				(ax -. cx)*. (by -. cy) -. (bx -. cx)*.(ay -. cy)
+	in
+
+	let triangle pos1 pos2 pos3 s2 = 
+		draw_triangle (Raylib.Vector2.create ((C.foi C.h)*.(fst pos1)/.1000.) ((C.foi C.h)*.(snd pos1)/.1000.))
+		(Raylib.Vector2.create ((C.foi C.h)*.(fst pos2)/.1000.) ((C.foi C.h)*.(snd pos2)/.1000.))
+		(Raylib.Vector2.create ((C.foi C.h)*.(fst pos3)/.1000.) ((C.foi C.h)*.(snd pos3)/.1000.))
+		Color.pink;
+		for i = 0 to Array.length pearls - 1 do 
+			if is_in_triangle (pearls.(i).x,pearls.(i).y) pos1 pos2 pos3 then 
+			begin
+				let x = (pearls.(i).x,pearls.(i).y) in 
+				let u = pos1 $-. pos3 in  
+				let h = pos3 $+. 
+				((squared_norm (pos1 $-. pos3)) $/. 
+					(((x $-. pos3) $. (pos1 $-. pos3)) $*. (pos1 $-. pos3))) in 
+				let th = (norm (pos1 $-. pos3)) /. (norm (h $-. pos3)) in 
+				let systeme = (pos3 $-. pos2, h $-. x) in 
+				if det systeme != 0. then (
+					let (u,t) = (inverse systeme) &*. (h $-. pos3) in 
+					let new_x,new_y = h $+. (t $*. (h $-. x) ) in 
+					let vel_mod_x,vel_mod_y = ((1. -. !C.r_a)/.2.) $*. (pos2 $-. pos1) in 
+					pearls.(i).x <- new_x;
+					pearls.(i).y <- new_y;
+					pearls.(i).vel_x <- -. vel_mod_x;
+					pearls.(i).vel_y <- -. vel_mod_y;
+					s.vel_x <- s.vel_x +. th *. vel_mod_x;
+					s.vel_y <- s.vel_y +. th *. vel_mod_y;
+					s2.vel_x <- s2.vel_x +. (1. -. th) *. vel_mod_x;
+					s2.vel_y <- s2.vel_y +. (1. -. th) *. vel_mod_y
+				)
+			end
+		done
+	in
 	let rec process_collision unit : unit = 
 		
 		let nearest_collision = ref None in 
@@ -353,10 +405,28 @@ let update_solid_position s polys solid =
 		done;
 		match !nearest_collision with 
 		| None -> (
-			s.x <- s.x +. !qx;
-			s.y <- s.y +. !qy;
-			s.acc_x <- 0.;
-			s.acc_y <- 0.;
+			let old_pos = (s.x,s.y) in 
+			let new_pos = (s.x +. !qx,s.y +. !qy) in 
+			(*faut trouver un triangle / faire un pour chaque triangle
+			triangle : ancienne position, nouvelle position, + lien
+			Une update par lien *)
+			(*
+
+			let is_in_triangle p pos1 pos2 pos3 = 
+				let d1,d2,d3 = sign p pos1 pos2, sign p pos2 pos3, sign p pos3 pos1 in 
+				not ( ((d1 < 0.) || (d2 < 0.) || (d3 < 0.)) 
+					&& ((d1 > 0.) || (d2 > 0.) || (d3 > 0.)) )
+			in *)
+
+			
+			List.iter (fun (nb,_,cond) -> 
+				if cond then (
+				if sign new_pos old_pos  (solid.(nb).x,solid.(nb).y) < 0. then
+				 triangle new_pos old_pos  (solid.(nb).x,solid.(nb).y) solid.(nb) 
+				else triangle old_pos new_pos  (solid.(nb).x,solid.(nb).y) solid.(nb)))
+			s.fixed_links;
+			s.x <- s.x +. !qx; 
+			s.y <- s.y +. !qy
 		)
 		| Some (a,b,i,j) -> (
 			let (a1,a2),(b1,b2) = a,b in 
@@ -366,8 +436,14 @@ let update_solid_position s polys solid =
 			let mat_trans_totale = pass_mat &. ((1.,0.),(0.,-.1.)) &. (inverse pass_mat) in 
 			let p_x, p_y = ((1.-. !min_t)/. !min_t) $*. (mat_trans_totale &*. ((h1 -. s.x),(h2 -. s.y))) in 
 			let new_vel_x, new_vel_y = mat_trans_totale &*. (s.vel_x,s.vel_y) in 
-			s.x <- h1;
-			s.y <- h2;
+			let old_pos = (s.x,s.y) in 
+			let new_pos = (h1,h2) in 
+			List.iter (fun (nb,_,cond) -> 
+				if cond then (
+				if sign new_pos old_pos  (solid.(nb).x,solid.(nb).y) < 0. then
+				 triangle new_pos old_pos  (solid.(nb).x,solid.(nb).y) solid.(nb) 
+				else triangle old_pos new_pos  (solid.(nb).x,solid.(nb).y) solid.(nb)))
+			s.fixed_links;
 			qx := p_x;
 			qy := p_y;
 			s.vel_x <- (1. -. !C.r_a) *. new_vel_x; 
@@ -380,7 +456,7 @@ let update_solid_position s polys solid =
 		)
 	in	
 	process_collision();
-	if s.x > 1000. || s.x < 0. || s.y > 1000. || s.y < 0.
+	(if (s.x > 1000. || s.x < 0. || s.y > 1000. || s.y < 0.)
 	then 
 	(	
 		let new_x = 50. +. Random.float (50.) in 
@@ -394,17 +470,20 @@ let update_solid_position s polys solid =
 			solid.(i).vel_x <- 0.;
 			solid.(i).vel_y <- 0.;
 			solid.(i).acc_x <- 0.;
-			solid.(i).acc_y <- 0.
+			solid.(i).acc_y <- 0.;
+			solid.(i).acc2_x <- 0.;
+			solid.(i).acc2_y <- 0.;
 		done
-	)
+	))
 
-let update_solid solid polys = 
+
+let update_solid solid polys pearls grid = 
 	for i = 0 to Array.length solid -1 do (*à parraléliser une fois en C*)
 		update_solid_acceleration solid.(i) solid;
 	done;
 	for i = 0 to Array.length solid -1 do 
 		(*important qu'on le fasse après - sinnon problèmes*)
-		update_solid_position solid.(i) polys solid ;
+		update_solid_position solid.(i) polys solid pearls grid;
 	done
 
 
@@ -691,10 +770,10 @@ let update_particle_position (p : particle) polys solids =
 			let new_vel_x, new_vel_y = mat_trans_totale &*. (p.vel_x,p.vel_y) in 
 			p.x <- h1;
 			p.y <- h2;
-			solids.(k).(i).acc_x <- solids.(k).(i).acc_x +. u*. !qx;
-			solids.(k).(i).acc_y <- solids.(k).(i).acc_y +. u*. !qy;
-			solids.(k).(j).acc_x <- solids.(k).(j).acc_x +. (1.-.u)*. !qx;
-			solids.(k).(j).acc_y <- solids.(k).(j).acc_y +. (1.-.u)*. !qy;
+			solids.(k).(i).acc2_x <- solids.(k).(i).acc_x +. u*. !qx;
+			solids.(k).(i).acc2_y <- solids.(k).(i).acc_y +. u*. !qy;
+			solids.(k).(j).acc2_x <- solids.(k).(j).acc_x +. (1.-.u)*. !qx;
+			solids.(k).(j).acc2_y <- solids.(k).(j).acc_y +. (1.-.u)*. !qy;
 			qx := p_x;
 			qy := p_y;
 			p.vel_x <- (1. -. !C.r_a) *. new_vel_x; 
@@ -835,12 +914,12 @@ let render_solids (solid : solid_particle array) =
 		Raylib.draw_circle 
 		(C.iof ((C.foi C.h)*.solid.(i).x/.1000.))
 		(C.iof ((C.foi C.h)*.solid.(i).y/.1000.))
-		4. Color.brown;
+		1. Color.brown;
 		List.iter (fun (k,_,_) ->
 		draw_line_ex 
 		(Vector2.create ((C.foi C.h)*.solid.(i).x/.1000.) ((C.foi C.h)*.solid.(i).y/.1000.) )
 		(Vector2.create ((C.foi C.h)*.solid.(k).x/.1000.) ((C.foi C.h)*.solid.(k).y/.1000.) ) 
-		2.
+		0.5
 		Color.brown)
 		solid.(i).fixed_links
 	done
@@ -1000,7 +1079,7 @@ let _ =
 		Raylib.close_window()
 		else begin
 			update_polygons (polygons);
-			update_solid triangle !polygons;
+			update_solid triangle !polygons !particles !grid;
 			(if not (!C.run_simulation) then
 			update_particles !grid !particles walls !polygons solides);
 			Ui.update();
