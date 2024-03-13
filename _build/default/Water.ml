@@ -51,6 +51,9 @@ let (&*.) (*produit matriciel MV avec v vecteur*) ( m : mat2) (v : vect) : vect 
 	let x,y = v in 
 	(a*.x +. b*.y),(c*.x +. d*.y)
 
+let orthogonal (a1,b1) (a2,b2) = 
+	(b2-.a2),(a1-.b1)
+
 
 
 type particle = 
@@ -278,7 +281,7 @@ let triangle =
 	acc_y = 0.;
 	acc2_x = 0.;
 	acc2_y = 0.;
-	mass = 10.;
+	mass = 1.;
 	fixed = false;
 	fixed_links = [(1,40.,true);(2,40.,true)]
 
@@ -292,7 +295,7 @@ let triangle =
 	acc_y = 0.;
 	acc2_x = 0.;
 	acc2_y = 0.;
-	mass = 10.;
+	mass = 1.;
 	fixed = false;
 	fixed_links = [(0,40.,true);(2,40.,true)]
 
@@ -306,7 +309,7 @@ let triangle =
 	acc_y = 0.;
 	acc2_x = 0.;
 	acc2_y = 0.;
-	mass = 10.;
+	mass = 1.;
 	fixed = false;
 	fixed_links = [(0,40.,true);(1,40.,true)]
 
@@ -330,8 +333,6 @@ let update_solid_acceleration s solid =
 
 let update_solid_position s polys solid (pearls : particle array) grid = 
 	(*même fonction que pour les particules parce que flemme *)
-	s.vel_x <- s.vel_x +. (s.acc_x/.s.mass)*.C.delta_t();
-	s.vel_y <- s.vel_y +. (s.acc_y/.s.mass +. !C.r_g)*. C.delta_t();
 	
 	let qx,qy = ref (s.vel_x*.C.delta_t()), ref (s.vel_y*.C.delta_t()) in  
 	let last_hit_nb = ref (-1) in
@@ -360,20 +361,76 @@ let update_solid_position s polys solid (pearls : particle array) grid =
 				let h = pos3 $+. 
 				((squared_norm (pos1 $-. pos3)) $/. 
 					(((x $-. pos3) $. (pos1 $-. pos3)) $*. (pos1 $-. pos3))) in 
-				let th = (norm (pos1 $-. pos3)) /. (norm (h $-. pos3)) in 
+				let th = (norm (h $-. pos3)) /. (norm (pos1 $-. pos3)) in 
 				let systeme = (pos3 $-. pos2, h $-. x) in 
-				if det systeme != 0. then (
-					let (u,t) = (inverse systeme) &*. (h $-. pos3) in 
+				if det systeme != 0. && th >= 0. && th <= 1. then (
+					(*let (u,t) = (inverse systeme) &*. (h $-. pos3) in 
 					let new_x,new_y = h $+. (t $*. (h $-. x) ) in 
-					let vel_mod_x,vel_mod_y = ((1. -. !C.r_a)/.2.) $*. (pos2 $-. pos1) in 
+					let vb = norm (th *. s.vel_x +. (1. -. th) *. s2.vel_x ,
+					th *. s.vel_y +. (1. -. th) *. s2.vel_y ) in 
+					let va = norm (pearls.(i).vel_x,pearls.(i).vel_y) in 
+					let va_x = pearls.(i).vel_x in 
+					let va_y = pearls.(i).vel_y in 
+					let mb = ((s.mass +. s2.mass)/.2.)  in 
+					let ma = pearls.(i).mass in 
+					let energy = mb *. vb *. vb +. ma *. va *. va in 
+					let momentum_x = ma *.  +. mb *. vb in 
+					let va_prime1 = (va *. momentum /. (mb +. ma)) +. sqrt( 
+						(va *. momentum /. (mb +. ma))*. (va *. momentum /. (mb +. ma))
+						-. (
+							momentum*.momentum /. (ma*. (mb +. ma))
+							-. energy*.mb /. (ma*.(mb +. ma))
+						)
+					) in 
+					let va_prime2 = (va *. momentum /. (mb +. ma)) -. sqrt( 
+						(va *. momentum /. (mb +. ma))*. (va *. momentum /. (mb +. ma))
+						-. (
+							momentum*.momentum /. (ma*. (mb +. ma))
+							-. energy*.mb /. (ma*.(mb +. ma))
+						)
+					) in 
+					let va_prime = if Float.abs (va_prime1 -. va) > Float.abs (va_prime2 -. va) then va_prime1 else va_prime2 in 
+					let vb_prime = (momentum +. va_prime*.ma)/.mb in 
+					let vel_dir_x,vel_dir_y = unitaire ( 
+						(ma *. pearls.(i).vel_x, ma *. pearls.(i).vel_y) $+.
+						(mb *. th *. s.vel_x, mb *.th *. s.vel_y) $+.
+						(mb *. (1. -. th) *. s2.vel_x, mb *. (1. -. th) *. s2.vel_y)) 
+					in 
+
 					pearls.(i).x <- new_x;
 					pearls.(i).y <- new_y;
-					pearls.(i).vel_x <- -. vel_mod_x;
-					pearls.(i).vel_y <- -. vel_mod_y;
-					s.vel_x <- s.vel_x +. th *. vel_mod_x;
-					s.vel_y <- s.vel_y +. th *. vel_mod_y;
-					s2.vel_x <- s2.vel_x +. (1. -. th) *. vel_mod_x;
-					s2.vel_y <- s2.vel_y +. (1. -. th) *. vel_mod_y
+					pearls.(i).vel_x <- va_prime *. vel_dir_x;
+					pearls.(i).vel_y <- va_prime *. vel_dir_y;
+					s.vel_x <-  vb_prime *. th *. vel_dir_x;
+					s.vel_y <-  vb_prime *. th *. vel_dir_y;
+					s2.vel_x <-  vb_prime *. (1. -. th) *. vel_dir_x;
+					s2.vel_y <-  vb_prime *. (1. -. th) *. vel_dir_y;*)
+					(*bonne tentative mais le système est vectoriel ET irrésoluble ...*)
+
+					let (u,t) = (inverse systeme) &*. (h $-. pos3) in 
+					let new_x,new_y = h $+. (t $*. (h $-. x) ) in 
+					let vb = norm (th *. s.vel_x +. (1. -. th) *. s2.vel_x ,
+					th *. s.vel_y +. (1. -. th) *. s2.vel_y ) in 
+					let vb_x = th *. s.vel_x +. (1. -. th) *. s2.vel_x  in 
+					let vb_y = th *. s.vel_y +. (1. -. th) *. s2.vel_y  in 
+					let va = norm (pearls.(i).vel_x,pearls.(i).vel_y) in 
+					let mb = ((s.mass +. s2.mass)/.2.)  in 
+					let ma = pearls.(i).mass in 
+					let energy = mb *. vb *. vb +. ma *. va *. va in 
+					let momentum = ma *. va +. mb *. vb in 
+					let orthog =  unitaire (orthogonal pos3 pos2) in
+					let pass_mat = inverse ( unitaire (pos2 $-. pos3),orthog) in 
+					let mat_trans_totale = pass_mat &. ((-.1.,0.),(0.,1.)) &. (inverse pass_mat) in 
+					let new_v_x, new_v_y = ((mb /. ma) $*. ((pearls.(i).x,pearls.(i).y) $-. (vb_x,vb_y))) in 
+					let new_sv_x, new_sv_y = (ma /. mb) $*. ((vb_x,vb_y) $-. (pearls.(i).x,pearls.(i).y)) in 
+					pearls.(i).x <- new_x;
+					pearls.(i).y <- new_y;
+					s.acc2_x <- s.acc2_x +. 0.01*.th *. new_sv_x /. C.delta_t() ;
+					s.acc2_y <- s.acc2_y +. 0.01*.th *. new_sv_y /. C.delta_t() ;
+					s2.acc2_x <- s2.acc2_x +. 0.001*.(1. -. th) *. new_sv_x /. C.delta_t();
+					s2.acc2_y <- s2.acc2_y +. 0.001*.(1. -. th) *. new_sv_y /. C.delta_t();
+					pearls.(i).vel_x <- pearls.(i).vel_x +. 0.001*.new_v_x;
+					pearls.(i).vel_y <- pearls.(i).vel_x +. 0.001*.new_v_y;
 				)
 			end
 		done
@@ -476,6 +533,9 @@ let update_solid_position s polys solid (pearls : particle array) grid =
 		done
 	))
 
+let update_solid_velocities s = 
+	s.vel_x <- s.vel_x +. (s.acc_x/.s.mass)*.C.delta_t();
+	s.vel_y <- s.vel_y +. (s.acc_y/.s.mass +. !C.r_g)*. C.delta_t()
 
 let update_solid solid polys pearls grid = 
 	for i = 0 to Array.length solid -1 do (*à parraléliser une fois en C*)
@@ -483,6 +543,7 @@ let update_solid solid polys pearls grid =
 	done;
 	for i = 0 to Array.length solid -1 do 
 		(*important qu'on le fasse après - sinnon problèmes*)
+		update_solid_velocities solid.(i);
 		update_solid_position solid.(i) polys solid pearls grid;
 	done
 
@@ -697,7 +758,7 @@ let update_particle_position (p : particle) polys solids =
 				end
 			done;
 		done;
-		for k = 0 to Array.length solids - 1 do 
+		(*for k = 0 to Array.length solids - 1 do 
 			for i = 0 to Array.length solids.(k) - 1 do 
 				List.iter (fun (j, _, cond) ->
 					if cond && 
@@ -727,7 +788,7 @@ let update_particle_position (p : particle) polys solids =
 					end) solids.(k).(i).fixed_links
 			done;
 		done;
-
+		*)
 
 		match !nearest_collision with 
 		| None -> (
@@ -914,12 +975,12 @@ let render_solids (solid : solid_particle array) =
 		Raylib.draw_circle 
 		(C.iof ((C.foi C.h)*.solid.(i).x/.1000.))
 		(C.iof ((C.foi C.h)*.solid.(i).y/.1000.))
-		1. Color.brown;
+		3. Color.brown;
 		List.iter (fun (k,_,_) ->
 		draw_line_ex 
 		(Vector2.create ((C.foi C.h)*.solid.(i).x/.1000.) ((C.foi C.h)*.solid.(i).y/.1000.) )
 		(Vector2.create ((C.foi C.h)*.solid.(k).x/.1000.) ((C.foi C.h)*.solid.(k).y/.1000.) ) 
-		0.5
+		1.
 		Color.brown)
 		solid.(i).fixed_links
 	done
