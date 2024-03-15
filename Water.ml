@@ -349,6 +349,7 @@ let update_solid_position s polys solid (pearls : particle array) grid =
 	in
 
 	let triangle pos1 pos2 pos3 s2 = 
+		(*debuging !!!*)
 		draw_triangle (Raylib.Vector2.create ((C.foi C.h)*.(fst pos1)/.1000.) ((C.foi C.h)*.(snd pos1)/.1000.))
 		(Raylib.Vector2.create ((C.foi C.h)*.(fst pos2)/.1000.) ((C.foi C.h)*.(snd pos2)/.1000.))
 		(Raylib.Vector2.create ((C.foi C.h)*.(fst pos3)/.1000.) ((C.foi C.h)*.(snd pos3)/.1000.))
@@ -409,28 +410,48 @@ let update_solid_position s polys solid (pearls : particle array) grid =
 
 					let (u,t) = (inverse systeme) &*. (h $-. pos3) in 
 					let new_x,new_y = h $+. (t $*. (h $-. x) ) in 
-					let vb = norm (th *. s.vel_x +. (1. -. th) *. s2.vel_x ,
+					let vb = (th *. s.vel_x +. (1. -. th) *. s2.vel_x ,
 					th *. s.vel_y +. (1. -. th) *. s2.vel_y ) in 
-					let vb_x = th *. s.vel_x +. (1. -. th) *. s2.vel_x  in 
-					let vb_y = th *. s.vel_y +. (1. -. th) *. s2.vel_y  in 
-					let va = norm (pearls.(i).vel_x,pearls.(i).vel_y) in 
+					let va = (pearls.(i).vel_x,pearls.(i).vel_y) in 
+					let xa = (pearls.(i).x,pearls.(i).y) in 
+					let xb = new_x,new_y in 
 					let mb = ((s.mass +. s2.mass)/.2.)  in 
 					let ma = pearls.(i).mass in 
-					let energy = mb *. vb *. vb +. ma *. va *. va in 
-					let momentum = ma *. va +. mb *. vb in 
+					let energy = mb *. (squared_norm vb) +. ma *. (squared_norm va)  in 
+					let momentum = (ma $*. va) $+. (mb $*. vb) in 
 					let orthog =  unitaire (orthogonal pos3 pos2) in
 					let pass_mat = inverse ( unitaire (pos2 $-. pos3),orthog) in 
-					let mat_trans_totale = pass_mat &. ((-.1.,0.),(0.,1.)) &. (inverse pass_mat) in 
-					let new_v_x, new_v_y = ((mb /. ma) $*. ((pearls.(i).x,pearls.(i).y) $-. (vb_x,vb_y))) in 
-					let new_sv_x, new_sv_y = (ma /. mb) $*. ((vb_x,vb_y) $-. (pearls.(i).x,pearls.(i).y)) in 
+					let mat_trans_totale = pass_mat &. ((1.,0.),(0.,-.1.)) &. (inverse pass_mat) in
+
+					(*) 
+					let x = orthog in 
+					let kscalx = (x $. momentum) /. (norm x) in 
+					let delta = kscalx *. kscalx -. 4. *. (
+							mb *. (norm momentum) -. energy) /. (2. *. ma *. (norm x)) 
+					in 
+					(if delta < 0. then failwith "delta negatif, what.");
+					let lamb = 0.5 *. ( -. kscalx +. sqrt (delta)) in
+
+					let nvs_x,nvs_y = mb $/. (momentum $-. ((ma *. lamb ) $*. x)) in 
+					let nvp_x,nvp_y = lamb $*. x in  *)
+
+					let va_prime_x,va_prime_y = va $-. ((
+						(2.*.mb/.(ma+.mb)) *.((va $-. vb) $.(xa $-. xb)) /.(squared_norm (C.delta_t() $*. va))
+					) $*. (xa $-. xb)) in 
+					let vb_prime_x,vb_prime_y = vb $-. ((
+						(2.*.ma/.(ma+.mb)) *.((vb $-. va) $.(xb $-. xa)) /.(squared_norm (C.delta_t() $*. va))
+					) $*. (xb $-. xa)) in 
+
+					pearls.(i).vel_x <- va_prime_x;
+					pearls.(i).vel_y <- va_prime_y;
+
+					s.vel_x <-  th *. vb_prime_x;
+					s.vel_y <-  th *. vb_prime_y;
+					s2.vel_x <-  (1. -. th) *. vb_prime_x;
+					s2.vel_y <-  (1. -. th) *. vb_prime_y;
+
 					pearls.(i).x <- new_x;
 					pearls.(i).y <- new_y;
-					s.acc2_x <- s.acc2_x +. 0.01*.th *. new_sv_x /. C.delta_t() ;
-					s.acc2_y <- s.acc2_y +. 0.01*.th *. new_sv_y /. C.delta_t() ;
-					s2.acc2_x <- s2.acc2_x +. 0.001*.(1. -. th) *. new_sv_x /. C.delta_t();
-					s2.acc2_y <- s2.acc2_y +. 0.001*.(1. -. th) *. new_sv_y /. C.delta_t();
-					pearls.(i).vel_x <- pearls.(i).vel_x +. 0.001*.new_v_x;
-					pearls.(i).vel_y <- pearls.(i).vel_x +. 0.001*.new_v_y;
 				)
 			end
 		done
@@ -758,7 +779,7 @@ let update_particle_position (p : particle) polys solids =
 				end
 			done;
 		done;
-		(*for k = 0 to Array.length solids - 1 do 
+		for k = 0 to Array.length solids - 1 do 
 			for i = 0 to Array.length solids.(k) - 1 do 
 				List.iter (fun (j, _, cond) ->
 					if cond && 
@@ -788,7 +809,7 @@ let update_particle_position (p : particle) polys solids =
 					end) solids.(k).(i).fixed_links
 			done;
 		done;
-		*)
+		
 
 		match !nearest_collision with 
 		| None -> (
@@ -821,29 +842,64 @@ let update_particle_position (p : particle) polys solids =
 		| Some (a,b,i,j,true,k, u) -> (
 			let (a1,a2),(b1,b2) = a,b in 
 			let h1,h2 = ( !final_u $*. a) $+. ((1.-. !final_u) $*.b) in 
-			let orthog =  (b2-.a2),(a1-.b1) in
+			let orthog = (b2-.a2),(a1-.b1) in
 			let pass_mat = inverse ((b $-. a),orthog) in 
 			let mat_trans_totale = pass_mat &. ((1.,0.),(0.,-.1.)) &. (inverse pass_mat) in 
 			(*plus optimisé ... plus ou moinp. dans l'idée;
 			si je veux que ce soit opti, j'en stocke une par segment ...*)
 			(*u est selon orthg et v selon b-a*)
-			let p_x, p_y = ((1.-. !min_t)/. !min_t) $*. (mat_trans_totale &*. ((h1 -. p.x),(h2 -. p.y))) in 
-			let new_vel_x, new_vel_y = mat_trans_totale &*. (p.vel_x,p.vel_y) in 
+			let p_x, p_y = ((1.-. !min_t)/. !min_t) 
+			$*. (mat_trans_totale &*. ((h1 -. p.x),(h2 -. p.y))) in 
+			let vb = (!final_u *. solids.(k).(i).vel_x +. (1. -. !final_u) *. solids.(k).(j).vel_x ,
+				!final_u *. solids.(k).(i).vel_y +. (1. -. !final_u) *. solids.(k).(j).vel_y ) in 
+			let va = (p.vel_x,p.vel_y) in 
+			let xa = (p.x,p.y) in 
+			let xb = (h1,h2) in
+			let mb = ((solids.(k).(i).mass +. solids.(k).(j).mass)/.2.)  in 
+			let ma = p.mass in 
+			let energy = mb *. (squared_norm vb) +. ma *. (squared_norm va)  in 
+			let momentum = (ma $*. va) $+. (mb $*. vb) in 
+
+			(*point critique*)(*)
+			let x = momentum  in 
+
+			let kscalx = (x $. momentum) /. (norm x) in 
+			let delta = kscalx *. kscalx -. 4. *. (
+					mb *. (norm momentum) -. energy) /. (2. *. ma *. (norm x)) 
+			in 
+			(if delta < 0. then failwith "delta negatif, what. in particles ! ");
+			let lamb = 0.5 *. ( -. kscalx -. sqrt (delta)) in
+
+			let nvs_x,nvs_y = mb $/. (momentum $-. ((ma *. lamb ) $*. x)) in 
+			let nvp_x,nvp_y = lamb $*. x in 
+			*)
+			let diff = (squared_norm (C.delta_t() $*. va)) $*. unitaire (xa $-. xb) in 
+			let va_prime_x,va_prime_y = va $-. ((
+				(2.*.mb/.(ma+.mb)) *.((va $-. vb) $.diff) /.(squared_norm (C.delta_t() $*. va))
+			) $*. diff) in 
+			let vb_prime_x,vb_prime_y = vb $-. ((
+				(2.*.ma/.(ma+.mb)) *.((va $-. vb) $. diff) /.(squared_norm (C.delta_t() $*. va))
+			) $*. ((0.,0.) $-. diff)) in 
+
+			solids.(k).(i).vel_x <- !final_u *. vb_prime_x;
+			solids.(k).(i).vel_y <- !final_u *. vb_prime_y;
+			solids.(k).(j).vel_x <- (1. -. !final_u) *. vb_prime_x;
+			solids.(k).(j).vel_y <- (1. -. !final_u) *. vb_prime_y;
+
+			qx := va_prime_x *. C.delta_t() -. (p.x -. h1);
+			qy := va_prime_y *. C.delta_t() -. (p.y -. h2);
+			p.vel_x <- va_prime_x;
+			p.vel_y <- va_prime_y;
 			p.x <- h1;
 			p.y <- h2;
-			solids.(k).(i).acc2_x <- solids.(k).(i).acc_x +. u*. !qx;
-			solids.(k).(i).acc2_y <- solids.(k).(i).acc_y +. u*. !qy;
-			solids.(k).(j).acc2_x <- solids.(k).(j).acc_x +. (1.-.u)*. !qx;
-			solids.(k).(j).acc2_y <- solids.(k).(j).acc_y +. (1.-.u)*. !qy;
-			qx := p_x;
-			qy := p_y;
-			p.vel_x <- (1. -. !C.r_a) *. new_vel_x; 
-			p.vel_y <- (1. -. !C.r_a) *.new_vel_y;
+			p.x <- p.x +. !qx;
+			p.y <- p.y +. !qy;
 			last_hit_nb := j;
 			last_hit_side := i;
 			last_hit_shape := k;
-			process_collision();
+			(*process_collision();*)
 			(*à terme - faire un truc un peux plus propre*)
+			(*le truc plus propre !*)
 		)
 		
 	in	
@@ -982,7 +1038,12 @@ let render_solids (solid : solid_particle array) =
 		(Vector2.create ((C.foi C.h)*.solid.(k).x/.1000.) ((C.foi C.h)*.solid.(k).y/.1000.) ) 
 		1.
 		Color.brown)
-		solid.(i).fixed_links
+		solid.(i).fixed_links ;
+		(if !C.arrows then 
+			draw_speed_arrow (solid.(i).x,solid.(i).y) 
+			(!C.arrow_size $*. (solid.(i).vel_x,solid.(i).vel_y) )
+			Color.brown
+		);
 	done
 
 

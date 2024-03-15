@@ -1,27 +1,138 @@
 # dune build
 # OCAMLPARAM: unset
 # Shared cache: disabled
-# Shared cache location: /home/awelime/.cache/dune/db
 # Workspace root: /home/awelime/water
-# Auto-detected concurrency: 12
+# Auto-detected concurrency: 8
+$ /home/awelime/.opam/5.0.0/bin/ocamlc.opt -config > /tmp/dune_646940_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
 #  ; profile = Dev
 #  ; merlin = true
+#  ; for_host = None
 #  ; fdo_target_exe = None
 #  ; build_dir = In_build_dir "default"
-#  ; installed_env =
+#  ; ocaml_bin = External "/home/awelime/.opam/5.0.0/bin"
+#  ; ocaml = Ok External "/home/awelime/.opam/5.0.0/bin/ocaml"
+#  ; ocamlc = External "/home/awelime/.opam/5.0.0/bin/ocamlc.opt"
+#  ; ocamlopt = Ok External "/home/awelime/.opam/5.0.0/bin/ocamlopt.opt"
+#  ; ocamldep = Ok External "/home/awelime/.opam/5.0.0/bin/ocamldep.opt"
+#  ; ocamlmklib = Ok External "/home/awelime/.opam/5.0.0/bin/ocamlmklib.opt"
+#  ; env =
 #      map
-#        { "INSIDE_DUNE" : "/home/awelime/water/_build/default"
+#        { "DUNE_OCAML_HARDCODED" :
+#            "/home/awelime/.opam/5.0.0/lib/ocaml:/home/awelime/.opam/5.0.0/lib"
+#        ; "DUNE_OCAML_STDLIB" : "/home/awelime/.opam/5.0.0/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" : "/home/awelime/water"
+#        ; "INSIDE_DUNE" : "/home/awelime/water/_build/default"
+#        ; "OCAMLFIND_IGNORE_DUPS_IN" :
+#            "/home/awelime/water/_build/install/default/lib"
+#        ; "OCAMLPATH" : "/home/awelime/water/_build/install/default/lib"
+#        ; "OCAMLTOP_INCLUDE_PATH" :
+#            "/home/awelime/water/_build/install/default/lib/toplevel"
 #        ; "OCAML_COLOR" : "always"
 #        ; "OPAMCOLOR" : "always"
 #        }
-#  ; instrument_with = []
+#  ; findlib_paths =
+#      [ External "/home/awelime/.opam/5.0.0/lib/ocaml"
+#      ; External "/home/awelime/.opam/5.0.0/lib"
+#      ]
+#  ; natdynlink_supported = true
+#  ; supports_shared_libraries = true
+#  ; ocaml_config =
+#      { version = "5.0.0"
+#      ; standard_library_default = "/home/awelime/.opam/5.0.0/lib/ocaml"
+#      ; standard_library = "/home/awelime/.opam/5.0.0/lib/ocaml"
+#      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
+#      ; ccomp_type = "cc"
+#      ; c_compiler = "gcc"
+#      ; ocamlc_cflags =
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
+#      ; ocamlc_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
+#      ; ocamlopt_cflags =
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
+#      ; ocamlopt_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
+#      ; bytecomp_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ]
+#      ; bytecomp_c_libraries = [ "-lm"; "-lpthread" ]
+#      ; native_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ]
+#      ; native_c_libraries = [ "-lm"; "-lpthread" ]
+#      ; native_pack_linker = [ "ld"; "-r"; "-o" ]
+#      ; cc_profile = []
+#      ; architecture = "amd64"
+#      ; model = "default"
+#      ; int_size = 63
+#      ; word_size = 64
+#      ; system = "linux"
+#      ; asm = [ "as" ]
+#      ; asm_cfi_supported = true
+#      ; with_frame_pointers = false
+#      ; ext_exe = ""
+#      ; ext_obj = ".o"
+#      ; ext_asm = ".s"
+#      ; ext_lib = ".a"
+#      ; ext_dll = ".so"
+#      ; os_type = "Unix"
+#      ; default_executable_name = "a.out"
+#      ; systhread_supported = true
+#      ; host = "x86_64-pc-linux-gnu"
+#      ; target = "x86_64-pc-linux-gnu"
+#      ; profiling = false
+#      ; flambda = false
+#      ; spacetime = false
+#      ; safe_string = true
+#      ; exec_magic_number = "Caml1999X032"
+#      ; cmi_magic_number = "Caml1999I032"
+#      ; cmo_magic_number = "Caml1999O032"
+#      ; cma_magic_number = "Caml1999A032"
+#      ; cmx_magic_number = "Caml1999Y032"
+#      ; cmxa_magic_number = "Caml1999Z032"
+#      ; ast_impl_magic_number = "Caml1999M032"
+#      ; ast_intf_magic_number = "Caml1999N032"
+#      ; cmxs_magic_number = "Caml1999D032"
+#      ; cmt_magic_number = "Caml1999T032"
+#      ; natdynlink_supported = true
+#      ; supports_shared_libraries = true
+#      ; windows_unicode = false
+#      }
 #  }
-$ /home/awelime/.opam/5.0.0/bin/ocamlc.opt -config > /tmp/dune_e9d9aa_output
 $ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamldep.opt -modules -impl Water.ml) > _build/default/.Water.eobjs/dune__exe__Water.impl.d
-$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -I .Water.eobjs/byte -I .Water.eobjs/native -I /home/awelime/.opam/5.0.0/lib/bigarray-compat -I /home/awelime/.opam/5.0.0/lib/ctypes -I /home/awelime/.opam/5.0.0/lib/ctypes/stubs -I /home/awelime/.opam/5.0.0/lib/integers -I /home/awelime/.opam/5.0.0/lib/ocaml/str -I /home/awelime/.opam/5.0.0/lib/ocaml/unix -I /home/awelime/.opam/5.0.0/lib/ppx_cstubs -I /home/awelime/.opam/5.0.0/lib/raylib -I /home/awelime/.opam/5.0.0/lib/raylib/c -I /home/awelime/.opam/5.0.0/lib/raylib/constants -I /home/awelime/.opam/5.0.0/lib/raylib/functions -I /home/awelime/.opam/5.0.0/lib/raylib/types -I /home/awelime/.opam/5.0.0/lib/stdlib-shims -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .Water.eobjs/native/dune__exe__Water.cmx -c -impl Water.ml)
+> File "Water.ml", line 426, characters 5-8:
+> 426 | 					(*) 
+>       					^^^
+> Warning 1 [comment-start]: this `(*' is the start of a comment.
+> Hint: Did you forget spaces when writing the infix operator `( * )'?
+> File "Water.ml", line 863, characters 21-24:
+> 863 | 			(*point critique*)(*)
+>       			                  ^^^
+> Warning 1 [comment-start]: this `(*' is the start of a comment.
+> Hint: Did you forget spaces when writing the infix operator `( * )'?
+$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -I .Water.eobjs/byte -I .Water.eobjs/native -I /home/awelime/.opam/5.0.0/lib/bigarray-compat -I /home/awelime/.opam/5.0.0/lib/ctypes -I /home/awelime/.opam/5.0.0/lib/ctypes/stubs -I /home/awelime/.opam/5.0.0/lib/integers -I /home/awelime/.opam/5.0.0/lib/ocaml/str -I /home/awelime/.opam/5.0.0/lib/ocaml/unix -I /home/awelime/.opam/5.0.0/lib/raylib -I /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_c -I /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_fixed_types -I /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_functions -I /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_math -I /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_rlgl -I /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_types -I /home/awelime/.opam/5.0.0/lib/raylib/__private__/rlgl_generated_types -I /home/awelime/.opam/5.0.0/lib/raylib/__private__/rlgl_types -I /home/awelime/.opam/5.0.0/lib/stdlib-shims -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .Water.eobjs/native/dune__exe__Water.cmx -c -impl Water.ml)
+> File "Water.ml", line 426, characters 5-8:
+> 426 | 					(*) 
+>       					^^^
+> Warning 1 [comment-start]: this `(*' is the start of a comment.
+> Hint: Did you forget spaces when writing the infix operator `( * )'?
+> File "Water.ml", line 863, characters 21-24:
+> 863 | 			(*point critique*)(*)
+>       			                  ^^^
+> Warning 1 [comment-start]: this `(*' is the start of a comment.
+> Hint: Did you forget spaces when writing the infix operator `( * )'?
 > File "Water.ml", line 12, characters 0-22:
 > 12 | type point = int * int
 >      ^^^^^^^^^^^^^^^^^^^^^^
@@ -38,52 +149,72 @@ $ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..2
 > 334 | let update_solid_position s polys solid (pearls : particle array) grid = 
 >                                                                         ^^^^
 > Warning 27 [unused-var-strict]: unused variable grid.
-> File "Water.ml", line 360, characters 8-9:
-> 360 | 				let u = pos1 $-. pos3 in  
+> File "Water.ml", line 361, characters 8-9:
+> 361 | 				let u = pos1 $-. pos3 in  
 >       				    ^
 > Warning 26 [unused-var]: unused variable u.
-> File "Water.ml", line 410, characters 10-11:
-> 410 | 					let (u,t) = (inverse systeme) &*. (h $-. pos3) in 
+> File "Water.ml", line 411, characters 10-11:
+> 411 | 					let (u,t) = (inverse systeme) &*. (h $-. pos3) in 
 >       					     ^
 > Warning 27 [unused-var-strict]: unused variable u.
-> File "Water.ml", line 419, characters 9-15:
-> 419 | 					let energy = mb *. vb *. vb +. ma *. va *. va in 
+> File "Water.ml", line 420, characters 9-15:
+> 420 | 					let energy = mb *. (squared_norm vb) +. ma *. (squared_norm va)  in 
 >       					    ^^^^^^
 > Warning 26 [unused-var]: unused variable energy.
-> File "Water.ml", line 420, characters 9-17:
-> 420 | 					let momentum = ma *. va +. mb *. vb in 
+> File "Water.ml", line 421, characters 9-17:
+> 421 | 					let momentum = (ma $*. va) $+. (mb $*. vb) in 
 >       					    ^^^^^^^^
 > Warning 26 [unused-var]: unused variable momentum.
-> File "Water.ml", line 423, characters 9-25:
-> 423 | 					let mat_trans_totale = pass_mat &. ((-.1.,0.),(0.,1.)) &. (inverse pass_mat) in 
+> File "Water.ml", line 424, characters 9-25:
+> 424 | 					let mat_trans_totale = pass_mat &. ((1.,0.),(0.,-.1.)) &. (inverse pass_mat) in
 >       					    ^^^^^^^^^^^^^^^^
 > Warning 26 [unused-var]: unused variable mat_trans_totale.
-> File "Water.ml", line 438, characters 27-31:
-> 438 | 	let rec process_collision unit : unit = 
+> File "Water.ml", line 459, characters 27-31:
+> 459 | 	let rec process_collision unit : unit = 
 >       	                          ^^^^
 > Warning 27 [unused-var-strict]: unused variable unit.
-> File "Water.ml", line 560, characters 5-13:
-> 560 | 	let max_dist = C.fact_dist_max()*.C.l0() in
+> File "Water.ml", line 581, characters 5-13:
+> 581 | 	let max_dist = C.fact_dist_max()*.C.l0() in
 >       	    ^^^^^^^^
 > Warning 26 [unused-var]: unused variable max_dist.
-> File "Water.ml", line 561, characters 5-17:
-> 561 | 	let taille_carre = nb_particles |> C.foi |> sqrt |> C.iof in 
+> File "Water.ml", line 582, characters 5-17:
+> 582 | 	let taille_carre = nb_particles |> C.foi |> sqrt |> C.iof in 
 >       	    ^^^^^^^^^^^^
 > Warning 26 [unused-var]: unused variable taille_carre.
-> File "Water.ml", line 562, characters 30-31:
-> 562 | 	Array.init nb_particles (fun i -> {
+> File "Water.ml", line 583, characters 30-31:
+> 583 | 	Array.init nb_particles (fun i -> {
 >       	                             ^
 > Warning 27 [unused-var-strict]: unused variable i.
-> File "Water.ml", line 578, characters 40-41:
-> 578 | let update_particle_links grid pearls k m polys = 
+> File "Water.ml", line 599, characters 40-41:
+> 599 | let update_particle_links grid pearls k m polys = 
 >                                               ^
 > Warning 27 [unused-var-strict]: unused variable m.
-> File "Water.ml", line 578, characters 42-47:
-> 578 | let update_particle_links grid pearls k m polys = 
+> File "Water.ml", line 599, characters 42-47:
+> 599 | let update_particle_links grid pearls k m polys = 
 >                                                 ^^^^^
 > Warning 27 [unused-var-strict]: unused variable polys.
-> File "Water.ml", line 728, characters 27-31:
-> 728 | 	let rec process_collision unit : unit = 
+> File "Water.ml", line 749, characters 27-31:
+> 749 | 	let rec process_collision unit : unit = 
 >       	                          ^^^^
 > Warning 27 [unused-var-strict]: unused variable unit.
-$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -o Water.exe /home/awelime/.opam/5.0.0/lib/ocaml/unix/unix.cmxa /home/awelime/.opam/5.0.0/lib/stdlib-shims/stdlib_shims.cmxa /home/awelime/.opam/5.0.0/lib/integers/integers.cmxa -I /home/awelime/.opam/5.0.0/lib/integers /home/awelime/.opam/5.0.0/lib/bigarray-compat/bigarray_compat.cmxa /home/awelime/.opam/5.0.0/lib/ctypes/ctypes.cmxa -I /home/awelime/.opam/5.0.0/lib/ctypes /home/awelime/.opam/5.0.0/lib/ocaml/str/str.cmxa /home/awelime/.opam/5.0.0/lib/ctypes/stubs/ctypes_stubs.cmxa /home/awelime/.opam/5.0.0/lib/ppx_cstubs/ppx_cstubs.cmxa /home/awelime/.opam/5.0.0/lib/raylib/constants/raylib_generated_constants.cmxa /home/awelime/.opam/5.0.0/lib/raylib/types/raylib_generated_types.cmxa /home/awelime/.opam/5.0.0/lib/raylib/functions/raylib_functions.cmxa /home/awelime/.opam/5.0.0/lib/raylib/c/raylib_c.cmxa -I /home/awelime/.opam/5.0.0/lib/raylib/c /home/awelime/.opam/5.0.0/lib/raylib/raylib.cmxa .Water.eobjs/native/dune__exe.cmx .Water.eobjs/native/dune__exe__C.cmx .Water.eobjs/native/dune__exe__Ui.cmx .Water.eobjs/native/dune__exe__Water.cmx)
+> File "Water.ml", line 842, characters 26-27:
+> 842 | 		| Some (b,a,i,j,true,k, u) -> (
+>       		                        ^
+> Warning 27 [unused-var-strict]: unused variable u.
+> File "Water.ml", line 851, characters 7-10:
+> 851 | 			let p_x, p_y = ((1.-. !min_t)/. !min_t) 
+>       			    ^^^
+> Warning 26 [unused-var]: unused variable p_x.
+> File "Water.ml", line 851, characters 12-15:
+> 851 | 			let p_x, p_y = ((1.-. !min_t)/. !min_t) 
+>       			         ^^^
+> Warning 26 [unused-var]: unused variable p_y.
+> File "Water.ml", line 860, characters 7-13:
+> 860 | 			let energy = mb *. (squared_norm vb) +. ma *. (squared_norm va)  in 
+>       			    ^^^^^^
+> Warning 26 [unused-var]: unused variable energy.
+> File "Water.ml", line 861, characters 7-15:
+> 861 | 			let momentum = (ma $*. va) $+. (mb $*. vb) in 
+>       			    ^^^^^^^^
+> Warning 26 [unused-var]: unused variable momentum.
+$ (cd _build/default && /home/awelime/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -o Water.exe /home/awelime/.opam/5.0.0/lib/ocaml/unix/unix.cmxa /home/awelime/.opam/5.0.0/lib/stdlib-shims/stdlib_shims.cmxa /home/awelime/.opam/5.0.0/lib/integers/integers.cmxa -I /home/awelime/.opam/5.0.0/lib/integers /home/awelime/.opam/5.0.0/lib/bigarray-compat/bigarray_compat.cmxa /home/awelime/.opam/5.0.0/lib/ctypes/ctypes.cmxa -I /home/awelime/.opam/5.0.0/lib/ctypes /home/awelime/.opam/5.0.0/lib/ocaml/str/str.cmxa /home/awelime/.opam/5.0.0/lib/ctypes/stubs/ctypes_stubs.cmxa /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_types/raylib_types.cmxa /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_fixed_types/raylib_fixed_types.cmxa /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_functions/raylib_functions.cmxa /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_math/raylib_math.cmxa /home/awelime/.opam/5.0.0/lib/raylib/__private__/rlgl_types/rlgl_types.cmxa /home/awelime/.opam/5.0.0/lib/raylib/__private__/rlgl_generated_types/rlgl_generated_types.cmxa /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_rlgl/raylib_rlgl.cmxa /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_c/raylib_c.cmxa -I /home/awelime/.opam/5.0.0/lib/raylib/__private__/raylib_c /home/awelime/.opam/5.0.0/lib/raylib/raylib.cmxa .Water.eobjs/native/dune__exe.cmx .Water.eobjs/native/dune__exe__C.cmx .Water.eobjs/native/dune__exe__Ui.cmx .Water.eobjs/native/dune__exe__Water.cmx)
